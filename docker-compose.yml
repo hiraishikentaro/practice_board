@@ -1,0 +1,10 @@
+version: '3'
+services:
+  mysql:
+    build: ./mysql/
+    volumes:
+        - ./mysql/sqls:/docker-entrypoint-initdb.d # 初期データ投入
+    environment:
+        - MYSQL_ROOT_PASSWORD=root #rootパスワードの設定
+    ports:
+        - "3314:3306"

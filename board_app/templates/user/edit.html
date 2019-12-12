@@ -4,13 +4,13 @@
   <h2>{{ 'Edit User' if user else 'Add User'}}</h2>
   <form action="" method="post">
     <dl>
-      <dt>Name:
+      <dt>ユーザネーム:
       <dd><input type=text size=20 name=name value="{{ user.name if user }}">
-      <dt>Email:
+      <dt>Emailアドレス:
       <dd><input type=text size=20 name=email value="{{ user.email if user }}">
-      <dt>password:
+      <dt>パスワード:
       <dd><input type=password size=20 name=password value="">
-      <dd><input type=submit value={{ 'save' if user else 'create' }}>
+      <dd><input type=submit value={{ '保存' if user else '作成' }}>
     </dl>
   </form>
 {% endblock %}

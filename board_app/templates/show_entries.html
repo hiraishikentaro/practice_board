@@ -1,0 +1,39 @@
+{% extends "layout.html" %}
+{% block body %}
+
+  {% if session.user_id %}
+  <form action="{{ url_for('add_entry') }}" method=post class=add-entry>
+    <div class="form-group">
+        <input class="form-control" type="text" name="title" placeholder="タイトル">
+    </div>
+    <div class="form-group">
+      <textarea name="text" class="form-control" rows="3" placeholder="投稿内容"></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary" value="Share" value="Share">送信する</button>
+    </dl>
+  </form>
+  {% endif %}
+
+  <h2>投稿一覧</h2>
+
+    <table class="table">
+    <thead class="thead-dark">
+        <tr>
+        <th>日付</th>
+        <th>名前</th>
+        <th>タイトル</th>
+        <th>投稿</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for f in entries: %}
+            <tr>
+                <th scope="row">{{ f.pub_date }}</th>
+                <td>{{ f.name }}</td>
+                <td>{{ f.title }}</td>
+                <td>{{ f.text }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+    </table>
+{% endblock %}

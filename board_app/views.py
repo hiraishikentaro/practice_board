@@ -1,6 +1,23 @@
-from flask import request, redirect, url_for, render_template, flash, abort, jsonify, session
-from flaskr import app, db
-from flaskr.models import Entry, User
+from flask import request, redirect, url_for, render_template, flash, abort, jsonify, session, g
+from board_app import app, db
+from board_app.models import Entry, User
+from datetime import datetime
+
+def login_required(f):
+    @wraps(f)
+    def decorated_view(*args, **kwargs):
+        if g.user is None:
+            return redirect(url_for('login', next=request.path))
+        return f(*args, **kwargs)
+    return decorated_view
+
+@app.before_request
+def load_user():
+    user_id = session.get('user_id')
+    if user_id is None:
+        g.user = None
+    else:
+        g.user = User.query.get(session['user_id'])
 
 @app.route('/')
 def show_entries():
@@ -9,9 +26,18 @@ def show_entries():
 
 @app.route('/add', methods=['POST'])
 def add_entry():
+    user_id = session.get('user_id')
+    user = User.query.get(user_id)
+    name = user.name
+    date = datetime.now()
+    if request.form['title'] == '' or request.form['text'] == '':
+        flash('空白が存在します')
+        return redirect(url_for('show_entries'))
     entry = Entry(
             title=request.form['title'],
-            text=request.form['text']
+            text=request.form['text'],
+            name=name,
+            pub_date=date
             )
     db.session.add(entry)
     db.session.commit()
@@ -71,7 +97,7 @@ def login():
                 request.form['email'], request.form['password'])
         if authenticated:
             session['user_id'] = user.id
-            flash('You were logged in')
+            flash('ログイン完了')
             return redirect(url_for('show_entries'))
         else:
             flash('Invalid email or password')
@@ -80,5 +106,5 @@ def login():
 @app.route('/logout')
 def logout():
     session.pop('user_id', None)
-    flash('You were logged out')
+    flash('ログアウト完了')
     return redirect(url_for('show_entries'))

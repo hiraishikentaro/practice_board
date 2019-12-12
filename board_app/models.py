@@ -1,7 +1,8 @@
 from sqlalchemy.orm import synonym
 from werkzeug import check_password_hash, generate_password_hash
+from datetime import datetime
 
-from flaskr import db
+from board_app import db
 
 class User(db.Model):
     __tablename__ = 'users'
@@ -43,10 +44,12 @@ class Entry(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.Text)
     text = db.Column(db.Text)
+    name = db.Column(db.String(100))
+    pub_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
 
     def __repr__(self):
         return '<Entry id={id} title={title!r}>'.format(
-                id=self.id, title=self.title)
+                id=self.id, title=self.title, name = self.name, pub_date = self.pub_date)
 
 def init():
     db.create_all()

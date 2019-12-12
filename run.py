@@ -1,6 +1,6 @@
 from __future__ import print_function
 from flask_script import Manager
-from flaskr import app, db
+from board_app import app, db
 
 manager = Manager(app)
 
